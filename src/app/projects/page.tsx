@@ -3,47 +3,75 @@ import Image from 'next/image'
 
 import { Card } from '@/components/Card'
 import { SimpleLayout } from '@/components/SimpleLayout'
-import logoAnimaginary from '@/images/logos/animaginary.svg'
-import logoCosmos from '@/images/logos/cosmos.svg'
-import logoHelioStream from '@/images/logos/helio-stream.svg'
-import logoOpenShuttle from '@/images/logos/open-shuttle.svg'
-import logoPlanetaria from '@/images/logos/planetaria.svg'
+import logoLfit from '@/images/logos/lfit.png'
+import logoDataCol from '@/images/logos/datacollector.png'
+import logoJulie from '@/images/logos/julie.png'
+import logoHolistis from '@/images/logos/holistis.png'
+import logoDAF from '@/images/logos/daf974.png'
+import logoADF from '@/images/logos/ADF.png'
+import logoPapangues from "@/images/logos/papangues.png"
 
 const projects = [
   {
-    name: 'Planetaria',
+    name: 'Aqua Dance Flow',
     description:
-      'Creating technology to empower civilians to explore space on their own terms.',
-    link: { href: 'http://planetaria.tech', label: 'planetaria.tech' },
-    logo: logoPlanetaria,
+      "Site officiel de l'Aqua Dance Flow par Julie Gautier, combinant performance et design immersif. Développé en Next.js 15, TailwindCSS et TypeScript. Intègre l'API Eventbrite pour la gestion des événements et des webhooks pour la revalidation ISR.",
+    link: {
+      href: 'https://www.aquadanceflow.com',
+      label: 'aquadanceflow.com',
+    },
+    logo: logoADF,
   },
   {
-    name: 'Animaginary',
+    name: 'Les Papangues',
     description:
-      'High performance web animation library, hand-written in optimized WASM.',
-    link: { href: '#', label: 'github.com' },
-    logo: logoAnimaginary,
+      'Site vitrine pour un collège Montessori à La Réunion, développé en Next.js 15, TailwindCSS et TypeScript. Le design intègre une gestion dynamique des contenus, avec des performances optimisées et une approche responsive.',
+    link: {
+      href: 'https://www.lespapangues.com',
+      label: 'lespapangues.com',
+    },
+    logo: logoPapangues,
   },
   {
-    name: 'HelioStream',
+    name: 'DAF974',
     description:
-      'Real-time video streaming library, optimized for interstellar transmission.',
-    link: { href: '#', label: 'github.com' },
-    logo: logoHelioStream,
+      "Création d'une plateforme web moderne pour un service de direction externalisée, avec Calendly pour la réservation et Stripe pour les paiements. Conçu en Next.js et TailwindCSS pour une performance optimale.",
+    link: {
+      href: 'https://www.daf974.re',
+      label: 'daf974.re',
+    },
+    logo: logoDAF,
   },
   {
-    name: 'cosmOS',
+    name: 'Holistis',
     description:
-      'The operating system that powers our Planetaria space shuttles.',
-    link: { href: '#', label: 'github.com' },
-    logo: logoCosmos,
+      'Holistis est une plateforme de coaching en Next.js, Tailwind et TypeScript. Le backend utilise Sanity.io. Automatisation des newsletters MailChimp via Webhook lors de la publication de nouveaux articles.',
+    link: { href: 'https://www.holistis.net/', label: 'holistis.net' },
+    logo: logoHolistis,
   },
   {
-    name: 'OpenShuttle',
+    name: 'L.FIT',
     description:
-      'The schematics for the first rocket I designed that successfully made it to orbit.',
-    link: { href: '#', label: 'github.com' },
-    logo: logoOpenShuttle,
+      'Site de coaching sportif en Next.js, Tailwind et TypeScript. Gestion de contenu via Sanity.io. Inclu une section membres sécurisée avec Clerk et paiement via Stripe pour accès premium.',
+    link: { href: 'https://www.lfit.pro/', label: 'lfit.pro' },
+    logo: logoLfit,
+  },
+  {
+    name: 'Julie Gautier',
+    description:
+      'Portfolio artistique de Julie Gautier, spécialisée en art et vidéo aquatique. Développé en Next.js 13, TailwindCSS et TypeScript, avec un backend sur Sanity.io. Score de performance supérieur à 97% sur Lighthouse.',
+    link: { href: 'https://www.juliegautier.me/', label: 'juliegautier.me' },
+    logo: logoJulie,
+  },
+  {
+    name: 'Data Collector',
+    description:
+      'Formulaire client pour Data Chaman, codé en Next.js 13, Tailwind et TypeScript. Le backend utilise MongoDB et Prisma pour des opérations sécurisées. Conçu pour collecter et stocker de manière sécurisée des informations clients.',
+    link: {
+      href: 'https://github.com/sgautier-dev/data-collector',
+      label: 'github.com',
+    },
+    logo: logoDataCol,
   },
 ]
 
@@ -59,15 +87,15 @@ function LinkIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
 }
 
 export const metadata: Metadata = {
-  title: 'Projects',
-  description: 'Things I’ve made trying to put my dent in the universe.',
+  title: 'Projets',
+  description: 'Mes derniers projets web.',
 }
 
 export default function Projects() {
   return (
     <SimpleLayout
-      title="Things I’ve made trying to put my dent in the universe."
-      intro="I’ve worked on tons of little projects over the years but these are the ones that I’m most proud of. Many of them are open-source, so if you see something that piques your interest, check out the code and contribute if you have ideas for how it can be improved."
+      title="Mes derniers projets."
+      intro="En tant que développeur web fullstack (compétent sur tous les aspects d'un projet web), chaque projet est une manifestation de mon engagement pour l'excellence technique, la performance et la sécurité. Alliant compétence en codage et sensibilité humaine, je m'efforce de créer des solutions qui résistent aux défis du monde numérique en constante évolution."
     >
       <ul
         role="list"
@@ -75,19 +103,22 @@ export default function Projects() {
       >
         {projects.map((project) => (
           <Card as="li" key={project.name}>
-            <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-md ring-1 shadow-zinc-800/5 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0">
+            <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-slate-50 shadow-md shadow-slate-800/5 ring-1 ring-slate-900/5 dark:border dark:border-slate-700/50 dark:bg-slate-800 dark:ring-0">
               <Image
                 src={project.logo}
-                alt=""
+                alt="Sébastien Gautier, mes projets"
+                placeholder="blur"
                 className="h-8 w-8"
                 unoptimized
               />
             </div>
-            <h2 className="mt-6 text-base font-semibold text-zinc-800 dark:text-zinc-100">
-              <Card.Link href={project.link.href}>{project.name}</Card.Link>
+            <h2 className="mt-6 text-base font-semibold text-slate-800 dark:text-slate-100">
+              <Card.Link href={project.link.href} target="_blank">
+                {project.name}
+              </Card.Link>
             </h2>
             <Card.Description>{project.description}</Card.Description>
-            <p className="relative z-10 mt-6 flex text-sm font-medium text-zinc-400 transition group-hover:text-teal-500 dark:text-zinc-200">
+            <p className="relative z-10 mt-6 flex text-sm font-medium text-slate-400 transition group-hover:text-orange-500 dark:text-slate-200">
               <LinkIcon className="h-6 w-6 flex-none" />
               <span className="ml-2">{project.link.label}</span>
             </p>

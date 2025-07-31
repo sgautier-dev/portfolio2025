@@ -1,97 +1,94 @@
 import { type Metadata } from 'next'
-
-import { Card } from '@/components/Card'
-import { Section } from '@/components/Section'
+import Image from 'next/image'
 import { SimpleLayout } from '@/components/SimpleLayout'
 
-function SpeakingSection({
-  children,
-  ...props
-}: React.ComponentPropsWithoutRef<typeof Section>) {
-  return (
-    <Section {...props}>
-      <div className="space-y-16">{children}</div>
-    </Section>
-  )
-}
+import pierre from '@/images/profils/pierre.jpeg'
+import amine from '@/images/profils/amine.jpeg'
+import boris from '@/images/profils/boris.jpg'
+import rodolphe from '@/images/profils/rodolphe.jpeg'
 
-function Appearance({
-  title,
-  description,
-  event,
-  cta,
-  href,
-}: {
-  title: string
-  description: string
-  event: string
-  cta: string
-  href: string
-}) {
-  return (
-    <Card as="article">
-      <Card.Title as="h3" href={href}>
-        {title}
-      </Card.Title>
-      <Card.Eyebrow decorate>{event}</Card.Eyebrow>
-      <Card.Description>{description}</Card.Description>
-      <Card.Cta>{cta}</Card.Cta>
-    </Card>
-  )
-}
+const testimonials = [
+  {
+    body: "J'ai eu à travailler avec Sébastien dans mes précédents postes et je ne peux que le recommander: sérieux, force de proposition, compétent et bienveillant! Merci pour ce beau travail.",
+    author: {
+      name: 'Pierre Dillac',
+      handle: 'DAF groupe SIROB',
+      imageUrl: pierre,
+    },
+  },
+  {
+    body: "Merci Sébastien pour la qualité de l'application livrée pour notre société, en respectant les délais, le cahier des charges, la charte graphique, et toutes les fonctionnalités spécifiées ! Au delà du professionnalisme apprécié lors de nos échanges, ces derniers ont été fort conviviaux et constructifs. Bonne continuation.",
+    author: {
+      name: 'Amine Ayadi',
+      handle: 'manager Ayteams',
+      imageUrl: amine,
+    },
+  },
+  {
+    body: "J'apprécie chez Sébastien la juste analyse des besoins, les propositions pertinentes et créatives et la qualité des livrables. Le tout dans le cadre d'échanges créateurs de valeur pour l'un et l'autre. Merci Sébastien.",
+    author: {
+      name: 'Boris Benet',
+      handle: 'Coach Holistis',
+      imageUrl: boris,
+    },
+  },
+  {
+    body: 'Sébastien is an outstanding and compassionate professional, with strong core values and a powerful work ethic. He is very passionate and highly skilled, thanks to his team mind set.',
+    author: {
+      name: 'Rodolphe Sinimale',
+      handle: 'Metta Bhavana',
+      imageUrl: rodolphe,
+    },
+  },
+
+  // More testimonials...
+]
 
 export const metadata: Metadata = {
-  title: 'Speaking',
+  title: 'Références',
   description:
-    'I’ve spoken at events all around the world and been interviewed for many podcasts.',
+    'Témoignages clients.',
 }
 
 export default function Speaking() {
   return (
     <SimpleLayout
-      title="I’ve spoken at events all around the world and been interviewed for many podcasts."
-      intro="One of my favorite ways to share my ideas is live on stage, where there’s so much more communication bandwidth than there is in writing, and I love podcast interviews because they give me the opportunity to answer questions instead of just present my opinions."
+      title="Témoignages de réussite."
+      intro="Au-delà des technologies de pointe et des solutions sur mesure que je propose, ce qui distingue véritablement mes collaborations, ce sont mes compétences humaines. L'écoute active, l'engagement et la flexibilité sont autant de qualités que j'apporte à chaque projet. Découvrez ici les témoignages de clients qui ont été particulièrement séduits par cette approche intégrale, où la technique et l'humain vont de pair."
     >
       <div className="space-y-20">
-        <SpeakingSection title="Conferences">
-          <Appearance
-            href="#"
-            title="In space, no one can watch you stream — until now"
-            description="A technical deep-dive into HelioStream, the real-time streaming library I wrote for transmitting live video back to Earth."
-            event="SysConf 2021"
-            cta="Watch video"
-          />
-          <Appearance
-            href="#"
-            title="Lessons learned from our first product recall"
-            description="They say that if you’re not embarassed by your first version, you’re doing it wrong. Well when you’re selling DIY space shuttle kits it turns out it’s a bit more complicated."
-            event="Business of Startups 2020"
-            cta="Watch video"
-          />
-        </SpeakingSection>
-        <SpeakingSection title="Podcasts">
-          <Appearance
-            href="#"
-            title="Using design as a competitive advantage"
-            description="How we used world-class visual design to attract a great team, win over customers, and get more press for Planetaria."
-            event="Encoding Design, July 2022"
-            cta="Listen to podcast"
-          />
-          <Appearance
-            href="#"
-            title="Bootstrapping an aerospace company to $17M ARR"
-            description="The story of how we built one of the most promising space startups in the world without taking any capital from investors."
-            event="The Escape Velocity Show, March 2022"
-            cta="Listen to podcast"
-          />
-          <Appearance
-            href="#"
-            title="Programming your company operating system"
-            description="On the importance of creating systems and processes for running your business so that everyone on the team knows how to make the right decision no matter the situation."
-            event="How They Work Radio, September 2021"
-            cta="Listen to podcast"
-          />
-        </SpeakingSection>
+        <div className="mx-auto mt-16 flow-root max-w-3xl sm:mt-20 lg:mx-0 lg:max-w-none">
+          <div className="-mt-8 sm:-mx-4 sm:columns-2 sm:text-[0]">
+            {testimonials.map((testimonial) => (
+              <div
+                key={testimonial.author.handle}
+                className="pt-8 sm:inline-block sm:w-full sm:px-4"
+              >
+                <figure className="rounded-2xl bg-slate-100 dark:bg-slate-300 p-8 text-sm leading-6">
+                  <blockquote className="text-gray-900">
+                    <p>{`“${testimonial.body}”`}</p>
+                  </blockquote>
+                  <figcaption className="mt-6 flex items-center gap-x-4">
+                    <Image
+                      className="h-10 w-10 rounded-full bg-slate-100"
+                      src={testimonial.author.imageUrl}
+                      placeholder="blur"
+                      width={256}
+                      height={250}
+                      alt="Sébastien Gautier, références clients"
+                    />
+                    <div>
+                      <div className="font-semibold text-gray-900">
+                        {testimonial.author.name}
+                      </div>
+                      <div className="text-gray-600">{`@${testimonial.author.handle}`}</div>
+                    </div>
+                  </figcaption>
+                </figure>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </SimpleLayout>
   )
