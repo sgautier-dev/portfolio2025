@@ -1,8 +1,10 @@
 'use client'
-import { useState, useEffect, FormEvent } from 'react'
-import Script from 'next/script'
-import { Button } from '@/components/Button'
-import { ExclamationTriangleIcon } from '@heroicons/react/24/solid'
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
+import { useAction } from 'next-safe-action/hooks'
+import sendEmail from '@/actions/sendEmail'
+import { Loader2 } from 'lucide-react'
+import { DisplayServerActionResponse } from './DisplayServerActionResponse'
+import { Button } from './Button'
 
 function MailIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -27,104 +29,47 @@ function MailIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   )
 }
 export default function Contact() {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [message, setMessage] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitMessage, setSubmitMessage] = useState<string>('Envoyer')
-  const [submitError, setSubmitError] = useState<string>('')
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  })
+  const formRef = useRef<HTMLFormElement>(null)
+  const { execute, result, isExecuting } = useAction(sendEmail)
 
-  //hidding Google reCaptcha badge from page
-  useEffect(() => {
-    const style = document.createElement('style')
-    style.innerHTML = `
-		  .grecaptcha-badge {
-			visibility: hidden !important;
-		  }
-		`
-    document.head.appendChild(style)
-  }, [])
-
-  const getRecaptchaToken = async () => {
-    try {
-      const token = await window.grecaptcha.execute(
-        process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
-        { action: 'contact_form' },
-      )
-      return token
-    } catch (error) {
-      console.error(error)
-      return null
-    }
-  }
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
-    return emailRegex.test(email)
-  }
-
-  const resetForm = () => {
-    setName('')
-    setEmail('')
-    setMessage('')
-    setSubmitError('')
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }))
   }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
 
-    setSubmitError('')
-    setIsSubmitting(true)
-    setSubmitMessage('Envoi en cours...')
-
-    const token = await getRecaptchaToken()
-
-    if (!token) {
-      setSubmitError(
-        'Erreur lors de la vérification de sécurité. Veuillez réessayer.',
-      )
-      setSubmitMessage('Envoyer')
-      setIsSubmitting(false)
-      return
-    }
-
-    if (!validateEmail(email)) {
-      setSubmitError('Veuillez entrer une adresse e-mail valide.')
-      return
-    }
-
-    try {
-      // sending email
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, name, message, token }),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
-        setSubmitMessage(data.message)
-        resetForm()
-      } else {
-        throw new Error(
-          data.message || 'Une erreur est survenue. Veuillez réessayer.',
-        )
-      }
-    } catch (error: any) {
-      console.error(error)
-      setSubmitError(error.message)
-    } finally {
-      setTimeout(() => {
-        setSubmitMessage('Envoyer')
-      }, 3000) // delay before resetting the submission message
-      setIsSubmitting(false)
-    }
+    execute(formData)
   }
+
+  useEffect(() => {
+    if (!isExecuting && result.data?.message) {
+      if (formRef.current) {
+        formRef.current.reset() // Reset form if success
+      }
+      setFormData({
+        name: '',
+        email: '',
+        message: '',
+      })
+    }
+  }, [isExecuting, result])
+
   return (
     <form
       onSubmit={handleSubmit}
+      ref={formRef}
       className="rounded-2xl border border-slate-100 p-6 dark:border-slate-700/40"
     >
       <h2 className="flex text-sm font-semibold text-slate-900 dark:text-slate-100">
@@ -141,8 +86,9 @@ export default function Contact() {
           placeholder="Nom complet"
           aria-label="Nom complet"
           autoComplete="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
           required
           className="form-input mb-4"
         />
@@ -151,33 +97,31 @@ export default function Contact() {
           placeholder="E-mail"
           aria-label="Email address"
           autoComplete="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
           required
           className="form-input mb-4"
         />
         <textarea
           placeholder="Votre message"
           aria-label="Message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          name="message"
+          value={formData.message}
+          onChange={handleChange}
           required
           rows={4}
           className="form-input mb-4"
         ></textarea>
-        <Button type="submit" disabled={isSubmitting} className="self-end">
-          {submitMessage}
+        <Button type="submit" className="self-end">
+          {isExecuting ? (
+            <Loader2 className="h-5 w-5 animate-spin" />
+          ) : (
+            'Envoyer'
+          )}
         </Button>
-        {submitError && (
-          <div className="mt-2 flex items-center text-sm text-orange-600 sm:text-base">
-            <ExclamationTriangleIcon className="h-5 w-5" aria-hidden="true" />
-            <p className="ml-2">{submitError}</p>
-          </div>
-        )}
+        <DisplayServerActionResponse result={result} />
       </div>
-      <Script
-        src={`https://www.google.com/recaptcha/api.js?render=${process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}`}
-      />
     </form>
   )
 }
